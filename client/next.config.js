@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  distDir: "build",
+};
 
 const withFonts = require("next-fonts");
 

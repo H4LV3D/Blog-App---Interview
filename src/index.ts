@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 import config from "./config";
 import path from "path";
 
-// var cookies = require("cookie-parser");
 import cookies from "cookie-parser";
 import authRoutes from "./routes/authRoute";
 
@@ -30,9 +29,9 @@ app.use(
   })
 );
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Express & TypeScript Server");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Welcome to Express & TypeScript Server");
+// });
 
 app.use("/auth", authRoutes);
 
