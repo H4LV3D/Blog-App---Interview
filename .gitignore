@@ -14,6 +14,8 @@ logs/
 *.log.*
 
 /client/DS_Store
+/client/.env
+/client/.env.local
 
 # Build output
 dist/

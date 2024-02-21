@@ -11,6 +11,4 @@ const configs = {
 
 let server = configs[process.env.NODE_ENV as "development" | "production"];
 
-// module.exports = server;
-
 export default server;
