@@ -73,31 +73,13 @@
 }
 
 @font-face {
-  font-family: 'poppins';
-  font-weight: 400;
+  font-family: 'clash';
   font-style: normal;
-  src: url('/src/fonts/Poppins/static/Poppins-Regular.ttf');
+  src: url('/fonts/clashDisplay/ClashDisplay-Variable.ttf');
 }
 
-@font-face {
-  font-family: 'poppins';
-  font-weight: 500;
-  font-style: normal;
-  src: url('/src/fonts/Poppins/static/Poppins-Medium.ttf');
-}
-
-@font-face {
-  font-family: 'poppins';
-  font-weight: 600;
-  font-style: normal;
-  src: url('/src/fonts/Poppins/static/Poppins-SemiBold.ttf');
-}
-
-@font-face {
-  font-family: 'poppins';
-  font-weight: 700;
-  font-style: Bold;
-  src: url('/src/fonts/Poppins/static/Poppins-Bold.ttf');
+body {
+  font-family: 'clash', sans-serif;
 }
 
 .number {

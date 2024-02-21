@@ -27,7 +27,7 @@ function AuthLayout({ children, form }: Props) {
 
   return (
     <div
-      className={`grid grid-cols-1 md:grid-cols-2 items-center min-h-screen dark:bg-[#191919]`}
+      className={`grid grid-cols-1 sm:grid-cols-2 items-center md:overflow-y-hidden min-h-screen dark:bg-[#191919]`}
     >
       <div className="w-full h-screen border bg-white hidden lg:block">
         <div className="mx-8 min-h-screen overflow-hidden">

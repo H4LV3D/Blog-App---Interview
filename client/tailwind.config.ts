@@ -17,9 +17,8 @@ const config: Config = {
     },
     fontFamily: {
       oleo: ["oleo", "serif"],
+      clash: ["clash", "sans-serif"],
       raleway: ["raleway", "sans-serif"],
-      poppins: ["poppins", "sans-serif"],
-      sans: ["ui-sans-serif", "system-ui"],
     },
     extend: {
       spacing: {
@@ -87,5 +86,6 @@ const config: Config = {
     },
   },
   plugins: [],
+  important: true,
 };
 export default config;

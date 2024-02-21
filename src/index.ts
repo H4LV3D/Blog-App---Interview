@@ -29,9 +29,9 @@ app.use(
   })
 );
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Express & TypeScript Server");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("Welcome to Express & TypeScript Server");
+// });
 
 app.use("/auth", authRoutes);
 
@@ -47,9 +47,10 @@ const connectDB = async () => {
 };
 
 //Routes go here
-// app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "public/build/index.html"));
+
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/build/index.html"));
+  res.sendFile(path.join(__dirname, "public/build/index.html"));
 });
 
 connectDB().then(() => {
