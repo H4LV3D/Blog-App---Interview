@@ -30,3 +30,4 @@ dist/
 # Dependency lock files
 package-lock.json
 yarn.lock
+client/.env.local
