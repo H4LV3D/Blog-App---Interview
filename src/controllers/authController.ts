@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import User from "../src/models/User";
+import User from "../models/User";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASS,
@@ -98,11 +99,34 @@ const registerUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "User already exists. Login" });
     }
 
+    let username = await User.findOne({ userName });
+    if (username) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // generate otp 6 digits
     const otp = Math.floor(100000 + Math.random() * 900000);
+
+    let message = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Verify your email",
+      text: `Your OTP is ${otp}`,
+      html: `<p>Your OTP is ${otp}</p>`,
+    };
+
+    transporter.sendMail(message, (err: any, info: any) => {
+      if (err) {
+        console.log("Error occurred. " + err.message);
+        return process.exit(1);
+      }
+
+      console.log("Message sent: %s", info.messageId);
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    });
 
     // Create new user
     user = new User({
@@ -136,7 +160,7 @@ const registerUser = async (req: Request, res: Response) => {
     res.status(201).json({ token });
   } catch (error: any) {
     console.error(error.message);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Server Error sign up" });
   }
 };
 
