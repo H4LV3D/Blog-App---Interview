@@ -3,19 +3,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/User";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+import transporter from "../config/mail";
+import sendMail from "../utils/sendMail";
 
 const returnAvatarId = async (req: Request, res: Response) => {
   try {
@@ -118,16 +109,7 @@ const registerUser = async (req: Request, res: Response) => {
       html: `<p>Your OTP is ${otp}</p>`,
     };
 
-    transporter.sendMail(message, (err: any, info: any) => {
-      if (err) {
-        console.log("Error occurred. " + err.message);
-        return process.exit(1);
-      }
-
-      console.log("Message sent: %s", info.messageId);
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    });
-
+    sendMail(message);
     // Create new user
     user = new User({
       avatarId,
@@ -219,22 +201,14 @@ const resendOtp = async (req: Request, res: Response) => {
     await user.save();
 
     let message = {
-      from: "Sender Name <$email>",
-      to: "Recipient <${email}>",
+      from: process.env.EMAIL,
+      to: email,
       subject: "Verify your email",
       text: `Your OTP is ${otp}`,
       html: `<p>Your OTP is ${otp}</p>`,
     };
 
-    transporter.sendMail(message, (err: any, info: any) => {
-      if (err) {
-        console.log("Error occurred. " + err.message);
-        return process.exit(1);
-      }
-
-      console.log("Message sent: %s", info.messageId);
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    });
+    sendMail(message);
 
     res.json({ message: "Email sent" });
   } catch (error: any) {
