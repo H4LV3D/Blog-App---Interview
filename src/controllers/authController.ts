@@ -257,8 +257,8 @@ const requestReset = async (req: Request, res: Response) => {
 
 const passwordReset = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -268,7 +268,7 @@ const passwordReset = async (req: Request, res: Response) => {
     }
 
     // Hash password  and save
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
 
