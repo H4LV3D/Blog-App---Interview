@@ -25,7 +25,6 @@ const returnAvatarId = async (req: Request, res: Response) => {
       if (!user) {
         return res.status(400).json({ message: "User does not exist" });
       }
-      console.log(user);
       res.json({ avatarId: user.avatarId });
     } else {
       res.status(400).json({ message: "Invalid Email Address" });
@@ -285,30 +284,21 @@ const loginUser = async (req: Request, res: Response) => {
       }
     );
 
-    // setup http cookie headers
-    // res.setHeader(
-    //   "Set-Cookie",
-    //   `token=${token}; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=${
-    //     60 * 60 * 24
-    //   };`
-    // );
-
     res.cookie("refresh", token, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
     });
 
-    res.json({
-      token,
-      user: {
-        id: user.id,
-        avatarId: user.avatarId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        username: user.userName,
-        email: user.email,
-      },
+    res.status(200).json({
+      token: token,
+      id: user.id,
+      avatarId: user.avatarId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.userName,
+      email: user.email,
+      emailVerified: user.emailVerified,
     });
   } catch (error: any) {
     console.error(error.message);

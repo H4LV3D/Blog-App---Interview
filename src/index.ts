@@ -29,9 +29,9 @@ app.use(
   })
 );
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Welcome to Express & TypeScript Server");
-// });
+app.get("/", (req: Request, res: Response) => {
+  res.send("Welcome to Express & TypeScript Server");
+});
 
 app.use("/auth", authRoutes);
 
