@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { signup } from "../../client/src/utils/requests/auth";
 
 const UserSchema = new mongoose.Schema({
   avatarId: {
