@@ -5,7 +5,6 @@ import User from "../models/User";
 import dotenv from "dotenv";
 dotenv.config();
 
-import transporter from "../config/mail";
 import sendMail from "../utils/sendMail";
 
 const returnAvatarId = async (req: Request, res: Response) => {
