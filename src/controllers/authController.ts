@@ -257,8 +257,8 @@ const requestReset = async (req: Request, res: Response) => {
 
 const passwordReset = async (req: Request, res: Response) => {
   try {
-    const { email } = req.body;
-    if (!email) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -267,28 +267,12 @@ const passwordReset = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // generate otp 6 digits
-    const otp = Math.floor(100000 + Math.random() * 900000);
-
-    user.otp = otp;
+    // Hash password  and save
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
     await user.save();
 
-    let message = {
-      from: "Sender Name <$email>",
-      to: "Recipient <${email}>",
-      subject: "Password Reset",
-      text: `Your OTP is ${otp}`,
-      html: `<p>Your OTP is ${otp}</p>`,
-    };
-
-    transporter.sendMail(message, (err: any, info: any) => {
-      if (err) {
-        console.log("Error occurred. " + err.message);
-        return process.exit(1);
-      }
-    });
-
-    res.json({ message: "Successful password reset" });
+    res.status(200).json({ message: "Successful password reset" });
   } catch (error: any) {
     console.error(error.message);
     res.status(500).json({ message: "Server Error" });
