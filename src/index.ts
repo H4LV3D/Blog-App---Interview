@@ -4,10 +4,9 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import config from "./config";
-import path from "path";
-
 import cookies from "cookie-parser";
 import authRoutes from "./routes/authRoute";
+import blogRoutes from "./routes/blogRoutes";
 
 dotenv.config();
 
@@ -36,6 +35,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/blogs", blogRoutes);
 
 const connectDB = async () => {
   try {
@@ -47,13 +47,6 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-// //Routes go here
-// app.use(express.static(__dirname + "public/build/index.html"));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "public/build/index.html"));
-// });
 
 connectDB().then(() => {
   app.listen(process.env.PORT, function () {
