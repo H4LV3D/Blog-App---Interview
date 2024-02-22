@@ -1,11 +1,11 @@
 {
-  "name": "blog-app---interview",
+  "name": "blog-app-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "concurrently \"node src/index.ts\" \" cd client && yarn install && yarn dev \" ",
+    "start": "node index.ts ",
     "dev": "nodemon index.ts"
   },
   "keywords": [],
