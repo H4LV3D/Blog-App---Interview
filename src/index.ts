@@ -26,6 +26,7 @@ app.use(
       "http://localhost:8080",
       "http://localhost:8081",
       "https://blogger-interview.vercel.app",
+      "https://blogger-interview.vercel.app/",
     ],
   })
 );

@@ -170,7 +170,7 @@ const verifyOTP = async (req: Request, res: Response) => {
     user.emailVerified = true;
     await user.save();
 
-    res.json({ message: "Email verified" });
+    res.json({ message: "OTP verified" });
   } catch (error: any) {
     console.error(error.message);
     res.status(500).json({ message: "Server Error" });
@@ -217,6 +217,44 @@ const resendOtp = async (req: Request, res: Response) => {
   }
 };
 
+const requestReset = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const user = await User.findOne({
+      email,
+    });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // generate otp 6 digits
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    user.otp = otp;
+
+    let message = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Password Reset",
+      text: `Your OTP is ${otp}`,
+      html: `<p>Your OTP is ${otp}</p>`,
+    };
+
+    sendMail(message);
+
+    await user.save();
+
+    res.status(200).json({ message: "Email sent" });
+  } catch (error: any) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 const passwordReset = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -250,7 +288,7 @@ const passwordReset = async (req: Request, res: Response) => {
       }
     });
 
-    res.json({ message: "Email sent" });
+    res.json({ message: "Successful password reset" });
   } catch (error: any) {
     console.error(error.message);
     res.status(500).json({ message: "Server Error" });
@@ -330,4 +368,5 @@ export {
   verifyOTP,
   resendOtp,
   passwordReset,
+  requestReset,
 };

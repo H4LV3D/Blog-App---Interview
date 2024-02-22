@@ -8,6 +8,7 @@ import {
   verifyOTP,
   resendOtp,
   passwordReset,
+  requestReset,
 } from "../controllers/authController";
 
 const router = express.Router();
@@ -23,7 +24,9 @@ router.post("/verify", verifyOTP);
 
 router.post("/resend", resendOtp);
 
-router.post("/password-reset", passwordReset);
+router.post("/request-reset", requestReset);
+
+router.post("/reset-password", passwordReset);
 
 // Route for user login
 router.post("/login", loginUser);
