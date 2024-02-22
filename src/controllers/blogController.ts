@@ -1,24 +1,66 @@
 import { Request, Response } from "express";
-const BlogPost = require("../models/BlogPost");
+import jwt from "jsonwebtoken";
+import Blog from "../models/Blog";
+import User from "../models/User";
 
 const createBlogPost = async (req: Request, res: Response) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, author } = req.body;
 
-    const newPost = new BlogPost({
+    const token = req.cookies.refresh;
+    if (!token) {
+      return res.status(400).json({ message: "You are not authenticated" });
+    }
+
+    if (!title || !content) {
+      return res.status(400).json({ message: "Missing title or content" });
+    }
+
+    // decrpit token and check if user is valid
+    const user = jwt.verify(token, process.env.JWT_SECRET as string);
+
+    // @ts-ignore
+    const isUser = await User.findById(user?.email);
+
+    if (!isUser) {
+      return res.status(400).json({ message: "User does not exist" });
+    }
+
+    const newPost = new Blog({
       title,
       content,
-      author: (req as any).user.id,
+      author: user,
     });
 
     const post = await newPost.save();
-    res.status(201).json(post);
+    res.status(201).json({ message: "Post created" });
   } catch (error: any) {
     console.error(error.message);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Implement other CRUD operations as needed
+const getBlogPosts = async (req: Request, res: Response) => {
+  try {
+    const posts = await Blog.find().populate("author", "username");
+    res.json(posts);
+  } catch (error: any) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 
-module.exports = { createBlogPost };
+const getBlogPostById = async (req: Request, res: Response) => {
+  try {
+    const post = await Blog.findById(req.params.id).populate(
+      "author",
+      "username"
+    );
+    res.json(post);
+  } catch (error: any) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export { createBlogPost, getBlogPosts, getBlogPostById };
