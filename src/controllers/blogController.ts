@@ -21,6 +21,7 @@ const createBlogPost = async (req: Request, res: Response) => {
 
     // @ts-ignore
     const isUser = await User.findById(user?.user?.id);
+    console.log(isUser);
 
     if (!isUser) {
       return res.status(400).json({ message: "User does not exist" });
@@ -32,7 +33,7 @@ const createBlogPost = async (req: Request, res: Response) => {
       author: isUser,
     });
 
-    const post = await newPost.save();
+    await newPost.save();
     res.status(201).json({ message: "Post created" });
   } catch (error: any) {
     console.error(error.message);
@@ -42,23 +43,69 @@ const createBlogPost = async (req: Request, res: Response) => {
 
 const getBlogPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Blog.find().populate("author", "username");
-    res.json(posts);
+    // Populate the author field with the complete user object
+    const posts = await Blog.find().populate("author");
+
+    // Response array to store modified posts
+    const responsePosts = [];
+
+    // Loop through each post
+    for (let post of posts) {
+      // Retrieve the user object ID
+      const userId = post.author._id;
+
+      // Retrieve the complete user object from the user collection
+      const user = await User.findById(userId);
+
+      // Create a modified post object with the complete user object
+      const modifiedPost = {
+        _id: post._id,
+        title: post.title,
+        content: post.content,
+        author: user, // Assign the complete user object
+        timestamp: post.timestamp,
+        __v: post.__v,
+      };
+
+      // Push the modified post to the response array
+      responsePosts.push(modifiedPost);
+    }
+
+    // Send the modified posts in the response
+    res.json(responsePosts);
   } catch (error: any) {
-    console.error(error.message);
+    console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
 const getBlogPostById = async (req: Request, res: Response) => {
   try {
-    const post = await Blog.findById(req.params.id).populate(
-      "author",
-      "username"
-    );
-    res.json(post);
+    // Find the blog post by ID and populate the author field with the complete user object
+    const post = await Blog.findById(req.params.id).populate("author");
+
+    // Check if the post exists
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Retrieve the user object associated with the author
+    const user = await User.findById(post.author._id);
+
+    // Create a modified post object with the complete user object
+    const modifiedPost = {
+      _id: post._id,
+      title: post.title,
+      content: post.content,
+      author: user, // Assign the complete user object
+      timestamp: post.timestamp,
+      __v: post.__v,
+    };
+
+    // Send the modified post in the response
+    res.json(modifiedPost);
   } catch (error: any) {
-    console.error(error.message);
+    console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
