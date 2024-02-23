@@ -7,6 +7,7 @@ import config from "./config";
 import cookies from "cookie-parser";
 import authRoutes from "./routes/authRoute";
 import blogRoutes from "./routes/blogRoutes";
+import subscribeRoutes from "./routes/subscribeRoute";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/auth", authRoutes);
 app.use("/blogs", blogRoutes);
+app.use("/subscribe", subscribeRoutes);
 
 const connectDB = async () => {
   try {
