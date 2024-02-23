@@ -21,7 +21,6 @@ const createBlogPost = async (req: Request, res: Response) => {
 
     // @ts-ignore
     const isUser = await User.findById(user?.user?.id);
-    console.log(isUser);
 
     if (!isUser) {
       return res.status(400).json({ message: "User does not exist" });
