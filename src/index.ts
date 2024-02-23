@@ -5,9 +5,9 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import config from "./config";
 import cookies from "cookie-parser";
-import authRoutes from "./routes/authRoute";
+import authRoutes from "./routes/authRoutes";
 import blogRoutes from "./routes/blogRoutes";
-import subscribeRoutes from "./routes/subscribeRoute";
+import subscribeRoutes from "./routes/subscribeRoutes";
 
 dotenv.config();
 
